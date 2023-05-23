@@ -84,6 +84,23 @@ GetAddressingMode
 
 
 *------------------------------------------------------------------------------
+* Subroutine : IsModeSupported
+* Description: Determines if the addressing mode is supported for a specific
+*              effective address.
+* Parameters : D1.B = The addressing mode.
+*              D2.B = The bit field of supported addressing modes.
+* Returns    : The Z-bit in the CCR is 1 if the mode is supported; 0 otherwise.
+* Notes      : The bit field of addressing modes maps each bit like so:
+*              0 = Dn          3 = (An)+           6 = (xxx).L
+*              1 = An          4 = -(An)           7 = #<data>
+*              2 = (An)        5 = (xxx).W
+*------------------------------------------------------------------------------
+IsModeSupported
+    BTST.B  D1,D2
+    RTS
+
+
+*------------------------------------------------------------------------------
 * Variables
 *------------------------------------------------------------------------------
 
