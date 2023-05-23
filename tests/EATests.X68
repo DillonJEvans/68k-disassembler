@@ -45,6 +45,11 @@ Start
     BSR     ExtractEA           * Extract the EA from the instruction
     MOVE.L  D0,D2               * Store the EA for later
 
+    MOVE.L  D2,D1
+    BSR     GetAddressingMode   * Get the addressing mode of the EA
+    CLR.L   D3
+    MOVE.B  D0,D3               * Store the addressing mode for later
+
     LEA     FirstMsg,A1
     MOVE.B  #14,D0
     TRAP    #15                 * Prepare to display the first part of the EA
@@ -65,6 +70,15 @@ Start
     MOVE.W  D2,D1
     MOVE.B  #3,D0
     TRAP    #15                 * Display the second part of the EA
+    BSR     NewLine
+
+    LEA     ModeMsg,A1
+    MOVE.B  #14,D0
+    TRAP    #15                 * Prepare to display the addressing mode
+
+    MOVE.L  D3,D1
+    MOVE.B  #3,D0
+    TRAP    #15                 * Display the addressing mode
     BSR     NewLine
 
     BSR     NewLine
@@ -89,8 +103,9 @@ UserInput   DS.B    81  * Allocate space for user input to be stored
 *------------------------------------------------------------------------------
 InstructionMsg  DC.B    'Instruction = $',0
 EABitMsg        DC.B    'EA Starting Bit = ',0
-FirstMsg        DC.B    '1st = ',0
-SecondMsg       DC.B    '2nd = ',0
+FirstMsg        DC.B    '1st  = ',0
+SecondMsg       DC.B    '2nd  = ',0
+ModeMsg         DC.B    'Mode = ',0
 InvalidMsg      DC.B    'That is not a valid instruction.',0
 
 
@@ -103,6 +118,7 @@ InvalidMsg      DC.B    'That is not a valid instruction.',0
 * End
 *------------------------------------------------------------------------------
     END     Start
+
 
 
 

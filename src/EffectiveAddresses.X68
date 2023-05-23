@@ -33,6 +33,57 @@ ExtractEA
 
 
 *------------------------------------------------------------------------------
+* Subroutine : GetAddressingMode
+* Description: Determines the addressing mode represented by the effective
+*              address.
+* Parameters : D1.L = The effective address.
+* Returns    : D0.B = The addressing mode.
+*                     0 = Dn          3 = (An)+           6 = (xxx).L
+*                     1 = An          4 = -(An)           7 = #<data>
+*                     2 = (An)        5 = (xxx).W        -1 = Unsupported
+*------------------------------------------------------------------------------
+GetAddressingMode
+    SWAP    D1                  * Prepare to do comparisons with the EA's mode
+
+    CMPI.B  #4,D1               * If mode <= 4:
+    BLE     .RegisterMode       *   Return mode
+    CMPI.B  #7,D1               * If mode < 7:
+    BLT     .Unsupported        *   Return -1
+    SWAP    D1                  * Prepare to do comparions with the EA's reg
+    CMPI.B  #0,D1               * If register == 0:
+    BEQ     .AddressingWord     *   Return 5
+    CMPI.B  #1,D1               * If register == 1:
+    BEQ     .AddressingLong     *   Return 6
+    CMPI.B  #4,D1               * If register == 4:
+    BEQ     .ImmediateData      *   Return 7
+    SWAP    D1                  * Swap D1 so the mode is in the low-byte to
+                                *   match the swap in Unsupported
+    BRA     .Unsupported        * Return -1
+
+.RegisterMode                   * Mode <= 4
+    MOVE.B  D1,D0
+    SWAP    D1                  * Swap the EA back before returning
+    RTS                         * Return mode
+
+.AddressingWord                 * Mode == 7 and Register == 0
+    MOVE.B  #5,D0
+    RTS                         * Return 5
+
+.AddressingLong                 * Mode == 7 and Register == 1
+    MOVE.B  #6,D0
+    RTS                         * Return 6
+
+.ImmediateData                  * Mode == 7 and Register == 4
+    MOVE.B  #7,D0
+    RTS
+
+.Unsupported                    * Else
+    MOVE.B  #-1,D0
+    SWAP    D1                  * Swap the EA back before returning
+    RTS                         * Return -1
+
+
+*------------------------------------------------------------------------------
 * Variables
 *------------------------------------------------------------------------------
 
