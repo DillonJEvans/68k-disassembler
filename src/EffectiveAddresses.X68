@@ -7,13 +7,53 @@
 
 
 *------------------------------------------------------------------------------
+* NOTES
+*
+* Effective Addresses:
+*   An effective address is stored in a single longword data register.
+*   The most-significant word of the long is the mode.
+*   The least-significant word of the long is the register.
+*   This is done to keep the mode and register together, rather than in
+*   separate data registers, and to make it easy to check their values by using
+*   SWAP along with word or byte sized comparisons.
+*
+* Addressing Modes:
+*   An addressing mode is stored in a byte of a data register.
+*   Although similar, this is NOT the same as the mode of an effective address.
+*   An addressing mode is a value from 0 to 7 that represents which addressing
+*   mode an effective address is.
+*   This table shows the addressing modes and their corresponding EAs:
+*       0 = Dn          3 = (An)+           6 = (xxx).L
+*       1 = An          4 = -(An)           7 = #<data>
+*       2 = (An)        5 = (xxx).W        -1 = Unsupported
+*   This is primarily used to identify if the addressing mode of an effective
+*   address is supported or not by a specific instruction.
+*
+* Bit Field of Supported Addressing Modes:
+*   A bit field is stored in a byte of a data register (or as immediate data).
+*   The purpose of a bit field is store 8 booleans: 1 for each addressing mode,
+*   with each boolean representing whether that addressing mode is supported or
+*   not by the specific instruction.
+*   The bits in a bit field correspond directly with addressing modes.
+*   This table shows the bits and their corresponding addressing modes:
+*       0 = Dn          3 = (An)+           6 = (xxx).L
+*       1 = An          4 = -(An)           7 = #<data>
+*       2 = (An)        5 = (xxx).W
+*   This makes it easy to check if an addressing mode is supported, by placing
+*   the addressing mode in a data register, and then doing:
+*       BTST.B  Dn,#<bit field as immediate data>
+*   or by using the IsModeSupported subroutine (which does the above).
+*   For example, the bit field of #%01111101 indicates that the EA supports
+*   all addressing modes except for immediate data and address register direct.
+*------------------------------------------------------------------------------
+
+
+*------------------------------------------------------------------------------
 * Subroutine : ExtractEA
 * Description: Extracts the effective address from an instruction word.
 * Parameters : D1.W = The instruction word.
 *              D2.B = The starting bit of the effective address.
 * Returns    : D0.L = The effective address.
-*                     The most-significant word is the mode (0 - 7).
-*                     The least-significant word is the register (0 - 7).
 *------------------------------------------------------------------------------
 ExtractEA
     MOVE.L  D3,-(SP)    * Preserve D3
@@ -38,9 +78,6 @@ ExtractEA
 *              address.
 * Parameters : D1.L = The effective address.
 * Returns    : D0.B = The addressing mode.
-*                     0 = Dn          3 = (An)+           6 = (xxx).L
-*                     1 = An          4 = -(An)           7 = #<data>
-*                     2 = (An)        5 = (xxx).W        -1 = Unsupported
 *------------------------------------------------------------------------------
 GetAddressingMode
     SWAP    D1                  * Prepare to do comparisons with the EA's mode
@@ -89,30 +126,40 @@ GetAddressingMode
 *              effective address.
 * Parameters : D1.B = The addressing mode.
 *              D2.B = The bit field of supported addressing modes.
-* Returns    : The Z-bit in the CCR is 1 if the mode is supported; 0 otherwise.
-* Notes      : The bit field of addressing modes maps each bit like so:
-*              0 = Dn          3 = (An)+           6 = (xxx).L
-*              1 = An          4 = -(An)           7 = #<data>
-*              2 = (An)        5 = (xxx).W
+* Returns    : The Z-bit in the CCR is 0 if the mode is supported; 1 otherwise.
 *------------------------------------------------------------------------------
 IsModeSupported
-    BTST.B  D1,D2
+    BTST.L  D1,D2
     RTS
 
 
 *------------------------------------------------------------------------------
-* Variables
+* Subroutine : CountExtWords
+* Description: Counts how many extension words are required for an effective
+*              address.
+* Parameters : D1.B = The addressing mode.
+*              D2.B = The size of the instruction.
+*                     0 = byte, 1 = word, 2 = long.
+* Returns    : D0.B = The number of extension words needed for the EA.
 *------------------------------------------------------------------------------
+CountExtWords
+    CMPI.B  #4,D1           * If mode <= 4:
+    BLE     .ZeroExtWords   *   Return 0
+    CMPI.B  #7,D1           * If mode < 7:
+    BLT     .AbsoluteMode   *   Return (mode - 4)
+    MOVE.B  D2,D0           * Else:
+    LSR.B   #1,D0           *   Return 1 for sizes 0 and 1
+    ADDQ.B  #1,D0           *   Return 2 for size 2
+    RTS
 
+.ZeroExtWords
+    MOVE.B  #0,D0
+    RTS                     * Return 0
 
-*------------------------------------------------------------------------------
-* Constants
-*------------------------------------------------------------------------------
-
-
-*------------------------------------------------------------------------------
-* Equates
-*------------------------------------------------------------------------------
+.AbsoluteMode
+    MOVE.B  D1,D0           * Mode 5 returns 1
+    SUBQ.B  #4,D0           * Mode 6 returns 2
+    RTS                     * So just return mode - 4
 
 
 
