@@ -9,8 +9,8 @@
 *------------------------------------------------------------------------------
 * Subroutine : DisplayByLetter
 * Description: Displays a string letter-by-letter. If the user presses a key,
-*              this subroutine will be interrupted and the entire string will
-*              be displayed immediately.
+*              this subroutine will be interrupted and the remainder of the
+*              string will be displayed immediately.
 * Parameters : (A1) = The null-terminated string to display.
 *              D1.L = How many hundreths of a second to wait between letters.
 * Returns    : None.
@@ -62,19 +62,31 @@ DisplayByLetter
 
 *------------------------------------------------------------------------------
 * Subroutine : WaitForEnter
-* Description: Waits for the user to press enter. It's not that fucking hard.
+* Description: Waits for the user to press enter.
 * Parameters : None.
 * Returns    : None.
 *------------------------------------------------------------------------------
 WaitForEnter
+
+.Registers  REG     D0-D1
+
+    MOVEM.L .Registers,-(SP)    * Preserve D0 and D1
+
     MOVE.B  #0,D1
     MOVE.B  #12,D0
     TRAP    #15                 * Disable echo
-    MOVE.B  #2,D0
-    TRAP    #15
+
+.ReadChar
+    MOVE.B  #5,D0
+    TRAP    #15                 * Accept a character from the user
+    CMPI.B  #$0D,D1             * If the char isn't a newline character
+    BNE     .ReadChar           * Keep waiting
+
     MOVE.B  #1,D1
     MOVE.B  #12,D0
     TRAP    #15                 * Enable echo
+
+    MOVEM.L (SP)+,.Registers    * Restore D0 and D1
     RTS
 
 

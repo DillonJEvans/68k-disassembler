@@ -33,6 +33,12 @@ Start
     MOVE.B  #4,D0
     TRAP    #15                 * Accept a wait time from the user
 
+    LEA     PressEnter,A1
+    MOVE.B  #13,D0
+    TRAP    #15                 * Ask the user to press enter
+
+    BSR     WaitForEnter        * Wait for the user to press enter
+
     LEA     UserInput,A1
     BSR     DisplayByLetter     * Display the string with the wait time
 
@@ -52,6 +58,7 @@ UserInput   DS.B    81  * Allocate space for user input to be stored
 *------------------------------------------------------------------------------
 String      DC.B    'String: ',0
 WaitTime    DC.B    'Wait Time: ',0
+PressEnter  DC.B    'Press enter to display the string...',0
 
 
 *------------------------------------------------------------------------------
