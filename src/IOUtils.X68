@@ -61,6 +61,24 @@ DisplayByLetter
 
 
 *------------------------------------------------------------------------------
+* Subroutine : NewLine
+* Description: Displays a new line (carriage return and line feed characters).
+* Parameters : None.
+* Returns    : None.
+*------------------------------------------------------------------------------
+NewLine
+
+.Registers  REG     D0/A1
+
+    MOVEM.L .Registers,-(SP)    * Preserve D0 and A1
+    LEA     CRLF,A1
+    MOVE.B  #14,D0
+    TRAP    #15                 * Display the new line characters
+    MOVEM.L (SP)+,.Registers    * Restore D0 and A1
+    RTS
+
+
+*------------------------------------------------------------------------------
 * Subroutine : WaitForEnter
 * Description: Waits for the user to press enter.
 * Parameters : None.
@@ -88,6 +106,12 @@ WaitForEnter
 
     MOVEM.L (SP)+,.Registers    * Restore D0 and D1
     RTS
+
+
+*------------------------------------------------------------------------------
+* Constants
+*------------------------------------------------------------------------------
+CRLF    DC.B    $0D,$0A,0,0     * New line characters
 
 
 

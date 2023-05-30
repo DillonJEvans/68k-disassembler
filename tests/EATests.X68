@@ -13,7 +13,7 @@
     INCLUDE ../src/EffectiveAddresses.X68
     INCLUDE ../src/HexToInt.X68
     INCLUDE ../src/IntToHex.X68
-    INCLUDE ../src/NewLine.X68
+    INCLUDE ../src/IOUtils.X68
 
 
 *------------------------------------------------------------------------------
@@ -203,6 +203,7 @@ InvalidMsg      DC.B    'That is not a valid instruction.',0
 * End
 *------------------------------------------------------------------------------
     END     Start
+
 
 
 
