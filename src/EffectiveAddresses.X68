@@ -162,6 +162,17 @@ CountExtWords
     RTS                     * So just return mode - 4
 
 
+*------------------------------------------------------------------------------
+* Subroutine : EAToString
+* Description: Converts an effective address to a string.
+* Parameters : D1.L = The effective address.
+*              D2.B = The size of the instruction.
+*                     0 = byte, 1 = word, 2 = long.
+*               A1  = The location to store the string at.
+* Returns    : (A1) = The null-terminated string.
+*------------------------------------------------------------------------------
+
+
 
 
 
