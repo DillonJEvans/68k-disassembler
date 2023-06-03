@@ -166,11 +166,95 @@ CountExtWords
 * Subroutine : EAToString
 * Description: Converts an effective address to a string.
 * Parameters : D1.L = The effective address.
-*              D2.B = The size of the instruction.
+*              D2.B = The addressing mode.
+*              D3.B = The size of the instruction.
 *                     0 = byte, 1 = word, 2 = long.
 *               A1  = The location to store the string at.
 * Returns    : (A1) = The null-terminated string.
+*              D0.L = The length of the string.
 *------------------------------------------------------------------------------
+EAToString
+    CMPI.B  #0,D2
+    BEQ     .DataDirect
+    CMPI.B  #1,D2
+    BEQ     .AddrDirect
+    CMPI.B  #2,D2
+    BEQ     .AddrIndirect
+    CMPI.B  #3,D2
+    BEQ     .AddrIncrement
+    CMPI.B  #4,D2
+    BEQ     .AddrDecrement
+
+    MOVE.L  D1,-(SP)
+
+    CMPI.B  #5,D2
+    BEQ     .AbsAddrWord
+    CMPI.B  #6,D2
+    BEQ     .AbsAddrLong
+    CMPI.B  #7,D2
+    BEQ     .Immediate
+
+    BRA     .Unsupported
+
+.DataDirect
+    BSR     DataDirectToString
+    RTS
+
+.AddrDirect
+    BSR     AddrDirectToString
+    RTS
+
+.AddrIndirect
+    BSR     AddrIndirectToString
+    RTS
+
+.AddrIncrement
+    BSR     AddrIncrementToString
+    RTS
+
+.AddrDecrement
+    BSR     AddrDecrementToString
+    RTS
+
+.AbsAddrWord
+    MOVE.W  (A5)+,D1
+    BSR     AbsAddrWordToString
+    MOVE.L  (SP)+,D1
+    RTS
+
+.AbsAddrLong
+    MOVE.L  (A5)+,D1
+    BSR     AbsAddrLongToString
+    MOVE.L  (SP)+,D1
+    RTS
+
+.Immediate
+    CMPI.B  #1,D3
+    BLT     .ImmediateByte
+    BEQ     .ImmediateWord
+    BGT     .ImmediateLong
+
+.ImmediateByte
+    MOVE.W  (A5)+,D1
+    BSR     ImmediateByteToString
+    MOVE.L  (SP)+,D1
+    RTS
+
+.ImmediateWord
+    MOVE.W  (A5)+,D1
+    BSR     ImmediateWordToString
+    MOVE.L  (SP)+,D1
+    RTS
+
+.ImmediateLong
+    MOVE.L  (A5)+,D1
+    BSR     ImmediateLongToString
+    MOVE.L  (SP)+,D1
+    RTS
+
+.Unsupported
+    BSR     UnsupportedToString
+    RTS
 
 
 
