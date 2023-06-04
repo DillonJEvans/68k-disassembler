@@ -20,11 +20,14 @@ IntToHex
 
     MOVEM.L .Registers,-(SP)    * Preserve D0, D1, and D2
 
+    CLR.L   D0
+    MOVE.B  D2,D0
+    MOVE.L  D0,D2               * Clear all but the lower byte of D2
     ADDA.L  D2,A1               * Move A1 to the last char (null terminator)
     CLR.B   (A1)                * Make the last char be the null terminator
 
 .Loop
-    SUBQ.L  #1,D2               * Decrement D2, and if D2 < 0:
+    SUBQ.B  #1,D2               * Decrement D2, and if D2 < 0:
     BLT     .Return             *   Conversion complete
 
     BSR     IntToHexChar        * Convert the least-significant 4 bits of D1
@@ -55,6 +58,7 @@ IntToHexChar
     SUBI.B  #10,D0
     ADDI.B  #'A',D0
     RTS                 * Return D0 - 10 + 'A'
+
 
 
 
