@@ -20,6 +20,9 @@ GetMemoryImage
 
     MOVEM.L .Registers,-(SP)    * Preserve D0, D1, and A1
 
+    MOVE.L  #DefaultColor,D1
+    BSR     SetTextColor        * Set the text color to default color
+
     LEA     WelcomeMsg,A1
     MOVE.L  #LetterWaitTime,D1
     BSR     DisplayByLetter     * Display the description letter-by-letter
@@ -31,9 +34,15 @@ GetMemoryImage
 .StartAddr
     BSR     ClearLine
 
+    MOVE.L  #DefaultColor,D1
+    BSR     SetTextColor        * Set the text color to default color
+
     LEA     StartAddrMsg,A1
     MOVE.B  #14,D0
     TRAP    #15                 * Ask for the starting address
+
+    MOVE.L  #InputColor,D1
+    BSR     SetTextColor        * Set the text color to input color
 
     LEA     UserInput,A1
     MOVE.B  #2,D0
@@ -49,9 +58,15 @@ GetMemoryImage
 .EndAddr
     BSR     ClearLine
 
+    MOVE.L  #DefaultColor,D1
+    BSR     SetTextColor        * Set the text color to default color
+
     LEA     EndAddrMsg,A1
     MOVE.B  #14,D0
     TRAP    #15                 * Ask for the ending address
+
+    MOVE.L  #InputColor,D1
+    BSR     SetTextColor        * Set the text color to input color
 
     LEA     UserInput,A1
     MOVE.B  #2,D0
@@ -69,6 +84,7 @@ GetMemoryImage
     BSR     ClearLine
     MOVE.W  #-1,D1
     BSR     OffsetRow           * Get rid of any lingering error message text
+
     MOVEM.L (SP)+,.Registers    * Restore D0, D1, and A1
     RTS                         * Return A5 and A6
 
@@ -84,15 +100,12 @@ GetMemoryImage
     BSR     NewLine
     BSR     ClearLine
 
-    MOVE.L  #$000000FF,D1
-    BSR     SetTextColor        * Set text to red
+    MOVE.L  #InvalidInputColor,D1
+    BSR     SetTextColor        * Set the text color to invalid input color
 
     LEA     EndLTStartMsg,A1
     MOVE.B  #13,D0
     TRAP    #15                 * Display an error message
-
-    MOVE.L  #$00FFFFFF,D1
-    BSR     SetTextColor        * Set text to white
 
     MOVE.W  #-3,D1
     BSR     OffsetRow           * Move the cursor to where it was before
@@ -104,8 +117,8 @@ GetMemoryImage
     BSR     NewLine
     BSR     ClearLine
 
-    MOVE.L  #$000000FF,D1
-    BSR     SetTextColor        * Set text to red
+    MOVE.L  #InvalidInputColor,D1
+    BSR     SetTextColor        * Set the text color to invalid input color
 
     MOVE.B  #'"',D1
     MOVE.B  #6,D0
@@ -122,9 +135,6 @@ GetMemoryImage
     LEA     InvalidAddrMsg,A1
     MOVE.B  #13,D0
     TRAP    #15                 * Display an error message
-
-    MOVE.L  #$00FFFFFF,D1
-    BSR     SetTextColor        * Set text to white
 
     MOVE.W  #-3,D1
     BSR     OffsetRow           * Move the cursor to where it was before
@@ -171,6 +181,8 @@ EndLTStartMsg   DC.B    'The ending address must be greater than or equal to '
 LetterWaitTime  EQU     5
 CR              EQU     $0D
 LF              EQU     $0A
+
+
 
 
 

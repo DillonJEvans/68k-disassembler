@@ -204,8 +204,8 @@ DisplayEA
     BRA     .BranchToDisplay
 
 .Unsupported
-    MOVE.L  #UnsupportedColor,D1
-    BSR     SetTextColor            * Set text color to unsupported color
+    MOVE.L  #UnsupportedEAColor,D1
+    BSR     SetTextColor            * Set text color to unsupported EA color
     MOVE.B  #1,D0                   * Set return value to 1
     BRA     .BranchToDisplay
 
@@ -281,15 +281,16 @@ DisplayEA
     BRA     .Return
 
 .Unidentifiable
-    MOVE.L  #UnidentifiedColor,D1
-    BSR     SetTextColor            * Set text color to unidentified color
-    BSR     DisplayUnidentified
+    MOVE.L  #UnidentifiedEAColor,D1
+    BSR     SetTextColor            * Set text color to unidentified EA color
+    BSR     DisplayUnidentified     * Display the unidentified EA
     MOVE.B  #2,D0                   * Set return value to 2
     BRA     .Return
 
 .Return
     MOVEM.L (SP)+,.Registers        * Restore D1, D4, and D5
     RTS
+
 
 
 

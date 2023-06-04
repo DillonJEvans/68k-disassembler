@@ -42,6 +42,9 @@ Start
 .FullScreen
     BSR     NewLine
 
+    MOVE.L  #WaitColor,D1
+    BSR     SetTextColor        * Set the text color to wait color
+
     LEA     PressEnterMsg,A1
     MOVE.B  #14,D0
     TRAP    #15                 * Ask the user to press enter
@@ -62,6 +65,15 @@ Start
     BRA     .Loop               * Keep looping
 
 .End
+    BSR     NewLine
+
+    MOVE.L  #CompletionColor,D1
+    BSR     SetTextColor        * Set the text color to completion color
+
+    LEA     CompleteMsg,A1
+    MOVE.B  #14,D0
+    TRAP    #15                 * Display a complete message
+
     MOVE.B  #9,D0
     TRAP    #15                 * Halt the simulator
 
@@ -70,12 +82,17 @@ Start
 * Constants
 *------------------------------------------------------------------------------
 PressEnterMsg   DC.B    'Please press enter to continue...',0
+CompleteMsg     DC.B    'Disassembling complete.',0
 
 
 *------------------------------------------------------------------------------
 * End
 *------------------------------------------------------------------------------
     END     Start
+
+
+
+
 
 
 

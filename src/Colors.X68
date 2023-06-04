@@ -30,27 +30,28 @@ SetTextColor
 * Equates
 *------------------------------------------------------------------------------
                             *00BBGGRR
+DefaultColor        EQU     $00FFFFFF   * White
+
+InputColor          EQU     $00CCCCCC   * Light Grey
+InvalidInputColor   EQU     $000000FF   * Red
+
+WaitColor           EQU     $00FFFFFF   * White
+CompletionColor     EQU     $0032CD32   * Lime Green
+
 AddressColor        EQU     $00AAAAAA   * Dark Grey
+
 InstructionColor    EQU     $00FFFFFF   * White
-DataColor           EQU     $00FFFFFF   * White
+DataLabelColor      EQU     $00CCCCCC   * Light Grey
+
 OperandColor        EQU     $00CCCCCC   * Light Grey
-UnsupportedColor    EQU     $000000FF   * Red
-UnidentifiedColor   EQU     $000000FF   * Red
+<<<<<<< HEAD
+=======
+DataHexColor        EQU     $00CCCCCC   * Light Grey
+UnsupportedEAColor  EQU     $000000FF   * Red
+UnidentifiedEAColor EQU     $000000FF   * Red
+>>>>>>> 9d66562 (Added more color options and ensured that all output is properly color coded)
 
-
-*--------------------------------------------------------
-* Possible Colors? 
-*
-* 
-* AddressColor        EQU     $00008000   * Green
-* InstructionColor    EQU     $00FF0000   * Red
-* DataColor           EQU     $000000FF   * Blue
-* OperandColor        EQU     $00808000   * Olive
-* UnsupportedColor    EQU     $008B008B   * Dark Magenta
-* UnidentifiedColor   EQU     $0080008B   * Dark Violet
-*
-*-----------------------------------------------------------
-
+InvalidEAColor      EQU     $000000FF   * Red
 
 
 
