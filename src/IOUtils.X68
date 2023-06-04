@@ -258,26 +258,6 @@ OffsetRow
 
 
 *------------------------------------------------------------------------------
-* Subroutine : SetTextColor
-* Description: Sets the text color.
-* Parameters : D1.L = The text color ($00BBGGRR).
-* Returns    : None.
-*------------------------------------------------------------------------------
-SetTextColor
-
-.Registers  REG     D0/D2
-
-    MOVEM.L .Registers,-(SP)    * Preserve D0 and D2
-
-    CLR.B   D2
-    MOVE.B  #21,D0
-    TRAP    #15                 * Set the text color
-
-    MOVEM.L (SP)+,.Registers    * Restore D0 and D2
-    RTS
-
-
-*------------------------------------------------------------------------------
 * Subroutine : WaitForEnter
 * Description: Waits for the user to press enter.
 * Parameters : None.
@@ -305,6 +285,7 @@ WaitForEnter
 
     MOVEM.L (SP)+,.Registers    * Restore D0 and D1
     RTS
+
 
 
 
