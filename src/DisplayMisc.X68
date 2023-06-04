@@ -56,8 +56,8 @@ DisplayData
     SUBQ.L  #8,SP
     MOVEA.L SP,A1               * Allocate 8 bytes for a string
 
-    MOVE.L  #DataColor,D1
-    BSR     SetTextColor        * Set text color to data color
+    MOVE.L  #DataLabelColor,D1
+    BSR     SetTextColor        * Set the text color to data label color
 
     MOVE.L  #'DATA',(A1)        * Add 'DATA' to the string
     CLR.B   (4,A1)              * Null terminate the string
@@ -68,8 +68,8 @@ DisplayData
     MOVE.B  #4,D1
     BSR     DisplaySpaces       * Display 4 spaces
 
-    MOVE.L  #OperandColor,D1
-    BSR     SetTextColor        * Set text color to operand color
+    MOVE.L  #DataHexColor,D1
+    BSR     SetTextColor        * Set the text color to data hex color
 
     MOVE.B  #'$',(A1)+          * Add '$' to a new string
     MOVE.L  D2,D1
@@ -123,6 +123,9 @@ DisplaySize
     MOVE.B  D2,D1       * Move the size back into D1
     MOVE.L  (SP)+,D2    * Restore D2
     RTS
+
+
+
 
 
 
