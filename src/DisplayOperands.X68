@@ -2,7 +2,7 @@
 * Title      : DisplayOperands
 * Written by : Dillon Evans
 * Date       : 5/24/23
-* Description: 
+* Description: Provides subroutines for displaying each kind of operand.
 *------------------------------------------------------------------------------
 
 
