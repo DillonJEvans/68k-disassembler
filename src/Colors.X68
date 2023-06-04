@@ -32,9 +32,12 @@ SetTextColor
                             *00BBGGRR
 AddressColor        EQU     $00AAAAAA   * Dark Grey
 InstructionColor    EQU     $00FFFFFF   * White
+DataColor           EQU     $00FFFFFF   * White
 OperandColor        EQU     $00CCCCCC   * Light Grey
 UnsupportedColor    EQU     $000000FF   * Red
 UnidentifiedColor   EQU     $000000FF   * Red
+
+
 
 
 
