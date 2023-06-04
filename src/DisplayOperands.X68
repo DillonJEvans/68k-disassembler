@@ -14,26 +14,21 @@
 *------------------------------------------------------------------------------
 DisplayDataDirect
 
-.Registers  REG     D0/D2/A1
+.Registers  REG     D0/A1
 
-    MOVEM.L .Registers,-(SP)    * Preserve D0, D2, and A1
-    MOVE.L  D1,D2               * D2 = The data register number
+    MOVEM.L .Registers,-(SP)    * Preserve D0 and A1
 
-    MOVE.L  #OperandColor,D1
-    BSR     SetTextColor        * Set the text color to operand color
-
-    MOVE.L  D2,D1
     LEA     (-4,SP),A1          * Allocate 4 bytes for the operand string
 
     MOVE.B  #'D',(A1)           * Add 'D' to the string
-    ADDI.B  #'0',D2             * Convert the data register number to a char
-    MOVE.B  D2,(1,A1)           * Add the data register number to the string
+    MOVE.B  D1,(1,A1)           * Add the data register number to the string
+    ADDI.B  #'0',(1,A1)         * Convert the data register number to a char
     CLR.B   (2,A1)              * Null terminate the string
 
     MOVE.B  #14,D0
     TRAP    #15                 * Display the operand string
 
-    MOVEM.L (SP)+,.Registers    * Restore D0, D2, and A1
+    MOVEM.L (SP)+,.Registers    * Restore D0 and A1
     RTS
 
 
@@ -45,26 +40,21 @@ DisplayDataDirect
 *------------------------------------------------------------------------------
 DisplayAddrDirect
 
-.Registers  REG     D0/D2/A1
+.Registers  REG     D0/A1
 
-    MOVEM.L .Registers,-(SP)    * Preserve D0, D2, and A1
-    MOVE.L  D1,D2               * D2 = The address register number
+    MOVEM.L .Registers,-(SP)    * Preserve D0 and A1
 
-    MOVE.L  #OperandColor,D1
-    BSR     SetTextColor        * Set the text color to operand color
-
-    MOVE.L  D2,D1
     LEA     (-4,SP),A1          * Allocate 4 bytes for the operand string
 
     MOVE.B  #'A',(A1)           * Add 'A' to the string
-    ADDI.B  #'0',D2             * Convert the address register number to a char
-    MOVE.B  D2,(1,A1)           * Add the address register number to the string
+    MOVE.B  D1,(1,A1)           * Add the address register number to the string
+    ADDI.B  #'0',(1,A1)         * Convert the address register number to a char
     CLR.B   (2,A1)              * Null terminate the string
 
     MOVE.B  #14,D0
     TRAP    #15                 * Display the operand string
 
-    MOVEM.L (SP)+,.Registers    * Restore D0, D2, and A1
+    MOVEM.L (SP)+,.Registers    * Restore D0 and A1
     RTS
 
 
@@ -76,27 +66,22 @@ DisplayAddrDirect
 *------------------------------------------------------------------------------
 DisplayAddrIndirect
 
-.Registers  REG     D0/D2/A1
+.Registers  REG     D0/A1
 
-    MOVEM.L .Registers,-(SP)    * Preserve D0, D2, and A1
-    MOVE.L  D1,D2               * D2 = The address register number
+    MOVEM.L .Registers,-(SP)    * Preserve D0 and A1
 
-    MOVE.L  #OperandColor,D1
-    BSR     SetTextColor        * Set the text color to operand color
-
-    MOVE.L  D2,D1
     LEA     (-8,SP),A1          * Allocate 8 bytes for the operand string
 
     MOVE.W  #'(A',(A1)          * Add '(A' to the string
-    ADDI.B  #'0',D2             * Convert the address register number to a char
-    MOVE.B  D2,(2,A1)           * Add the address register number to the string
+    MOVE.B  D1,(2,A1)           * Add the address register number to the string
+    ADDI.B  #'0',(2,A1)         * Convert the address register number to a char
     MOVE.B  #')',(3,A1)         * Add ')' to the string
     CLR.B   (4,A1)              * Null terminate the string
 
     MOVE.B  #14,D0
     TRAP    #15                 * Display the operand string
 
-    MOVEM.L (SP)+,.Registers    * Restore D0, D2, and A1
+    MOVEM.L (SP)+,.Registers    * Restore D0 and A1
     RTS
 
 
@@ -108,20 +93,15 @@ DisplayAddrIndirect
 *------------------------------------------------------------------------------
 DisplayAddrIncrement
 
-.Registers  REG     D0/D2/A1
+.Registers  REG     D0/A1
 
-    MOVEM.L .Registers,-(SP)    * Preserve D0, D2, and A1
-    MOVE.L  D1,D2               * D2 = The address register number
+    MOVEM.L .Registers,-(SP)    * Preserve D0 and A1
 
-    MOVE.L  #OperandColor,D1
-    BSR     SetTextColor        * Set the text color to operand color
-
-    MOVE.L  D2,D1
     LEA     (-8,SP),A1          * Allocate 8 bytes for the operand string
 
     MOVE.W  #'(A',(A1)          * Add '(A' to the string
-    ADDI.B  #'0',D2             * Convert the address register number to a char
-    MOVE.B  D2,(2,A1)           * Add the address register number to the string
+    MOVE.B  D1,(2,A1)           * Add the address register number to the string
+    ADDI.B  #'0',(2,A1)         * Convert the address register number to a char
     MOVE.B  #')',(3,A1)         * Add ')' to the string
     MOVE.B  #'+',(4,A1)         * Add '+' to the string
     CLR.B   (5,A1)              * Null terminate the string
@@ -129,7 +109,7 @@ DisplayAddrIncrement
     MOVE.B  #14,D0
     TRAP    #15                 * Display the operand string
 
-    MOVEM.L (SP)+,.Registers    * Restore D0, D2, and A1
+    MOVEM.L (SP)+,.Registers    * Restore D0 and A1
     RTS
 
 
@@ -141,27 +121,22 @@ DisplayAddrIncrement
 *------------------------------------------------------------------------------
 DisplayAddrDecrement
 
-.Registers  REG     D0/D2/A1
+.Registers  REG     D0/A1
 
-    MOVEM.L .Registers,-(SP)    * Preserve D0, D2, and A1
-    MOVE.L  D1,D2               * D2 = The address register number
+    MOVEM.L .Registers,-(SP)    * Preserve D0 and A1
 
-    MOVE.L  #OperandColor,D1
-    BSR     SetTextColor        * Set the text color to operand color
-
-    MOVE.L  D2,D1
     LEA     (-8,SP),A1          * Allocate 8 bytes for the operand string
 
     MOVE.L  #'-(A ',(A1)        * Add '-(A' to the string
-    ADDI.B  #'0',D2             * Convert the address register number to a char
-    MOVE.B  D2,(3,A1)           * Add the address register number to the string
+    MOVE.B  D1,(3,A1)           * Add the address register number to the string
+    ADDI.B  #'0',(3,A1)         * Convert the address register number to a char
     MOVE.B  #')',(4,A1)         * Add ')' to the string
     CLR.B   (5,A1)              * Null terminate the string
 
     MOVE.B  #14,D0
     TRAP    #15                 * Display the operand string
 
-    MOVEM.L (SP)+,.Registers    * Restore D0, D2, and A1
+    MOVEM.L (SP)+,.Registers    * Restore D0 and A1
     RTS
 
 
@@ -176,15 +151,10 @@ DisplayAbsAddrWord
 .Registers  REG     D0/D2/A1
 
     MOVEM.L .Registers,-(SP)    * Preserve D0, D2, and A1
-    MOVE.L  D1,D2               * D2 = The absolute address
-
-    MOVE.L  #OperandColor,D1
-    BSR     SetTextColor        * Set the text color to operand color
 
     LEA     (-8,SP),A1          * Allocate 8 bytes for the operand string
 
     MOVE.B  #'$',(A1)+          * Add '$' to the string
-    MOVE.L  D2,D1
     MOVE.B  #4,D2
     BSR     IntToHex            * Add the absolute address to the string
     SUBQ.L  #1,A1
@@ -207,15 +177,10 @@ DisplayAbsAddrLong
 .Registers  REG     D0/D2/A1
 
     MOVEM.L .Registers,-(SP)    * Preserve D0, D2, and A1
-    MOVE.L  D1,D2               * D2 = The absolute address
-
-    MOVE.L  #OperandColor,D1
-    BSR     SetTextColor        * Set the text color to operand color
 
     LEA     (-12,SP),A1         * Allocate 12 bytes for the operand string
 
     MOVE.B  #'$',(A1)+          * Add '$' to the string
-    MOVE.L  D2,D1
     MOVE.B  #8,D2
     BSR     IntToHex            * Add the absolute address to the string
     SUBQ.L  #1,A1
@@ -238,15 +203,10 @@ DisplayImmediateByte
 .Registers  REG     D0/D2/A1
 
     MOVEM.L .Registers,-(SP)    * Preserve D0, D2, and A1
-    MOVE.L  D1,D2               * D2 = The immediate data
-
-    MOVE.L  #OperandColor,D1
-    BSR     SetTextColor        * Set the text color to operand color
 
     LEA     (-8,SP),A1          * Allocate 8 bytes for the operand string
 
     MOVE.W  #'#$',(A1)+         * Add '#$' to the string
-    MOVE.L  D2,D1
     MOVE.B  #2,D2
     BSR     IntToHex            * Add the immediate data to the string
     SUBQ.L  #2,A1
@@ -269,15 +229,10 @@ DisplayImmediateWord
 .Registers  REG     D0/D2/A1
 
     MOVEM.L .Registers,-(SP)    * Preserve D0, D2, and A1
-    MOVE.L  D1,D2               * D2 = The immediate data
-
-    MOVE.L  #OperandColor,D1
-    BSR     SetTextColor        * Set the text color to operand color
 
     LEA     (-8,SP),A1          * Allocate 8 bytes for the operand string
 
     MOVE.W  #'#$',(A1)+         * Add '#$' to the string
-    MOVE.L  D2,D1
     MOVE.B  #4,D2
     BSR     IntToHex            * Add the immediate data to the string
     SUBQ.L  #2,A1
@@ -300,15 +255,10 @@ DisplayImmediateLong
 .Registers  REG     D0/D2/A1
 
     MOVEM.L .Registers,-(SP)    * Preserve D0, D2, and A1
-    MOVE.L  D1,D2               * D2 = The immediate data
-
-    MOVE.L  #OperandColor,D1
-    BSR     SetTextColor        * Set the text color to operand color
 
     LEA     (-12,SP),A1         * Allocate 12 bytes for the operand string
 
     MOVE.W  #'#$',(A1)+         * Add '#$' to the string
-    MOVE.L  D2,D1
     MOVE.B  #8,D2
     BSR     IntToHex            * Add the immediate data to the string
     SUBQ.L  #2,A1
@@ -322,18 +272,15 @@ DisplayImmediateLong
 
 *------------------------------------------------------------------------------
 * Subroutine : DisplayUnsupported
-* Description: Display an unsupported effective address.
+* Description: Displays an unsupported effective address.
 * Parameters : None.
 * Returns    : None.
 *------------------------------------------------------------------------------
 DisplayUnsupported
 
-.Registers  REG     D0-D1/A1
+.Registers  REG     D0/A1
 
-    MOVEM.L .Registers,-(SP)        * Preserve D0, D1, and A1
-
-    MOVE.L  #UnsupportedColor,D1
-    BSR     SetTextColor            * Set the text color to unsupported color
+    MOVEM.L .Registers,-(SP)        * Preserve D0 and A1
 
     LEA     (-4,SP),A1              * Allocate 4 bytes for the operand string
 
@@ -342,7 +289,7 @@ DisplayUnsupported
     MOVE.B  #14,D0
     TRAP    #15                     * Display the operand string
 
-    MOVEM.L (SP)+,.Registers        * Restore D0, D1, and A1
+    MOVEM.L (SP)+,.Registers        * Restore D0 and A1
     RTS
 
 
