@@ -18,7 +18,8 @@ DisplayDataDirect
 
     MOVEM.L .Registers,-(SP)    * Preserve D0 and A1
 
-    LEA     (-4,SP),A1          * Allocate 4 bytes for the operand string
+    SUBQ.L  #4,SP
+    MOVEA.L SP,A1               * Allocate 4 bytes for the operand string
 
     MOVE.B  #'D',(A1)           * Add 'D' to the string
     MOVE.B  D1,(1,A1)           * Add the data register number to the string
@@ -28,6 +29,7 @@ DisplayDataDirect
     MOVE.B  #14,D0
     TRAP    #15                 * Display the operand string
 
+    ADDQ.L  #4,SP               * Deallocate 4 bytes for the operand string
     MOVEM.L (SP)+,.Registers    * Restore D0 and A1
     RTS
 
@@ -44,7 +46,8 @@ DisplayAddrDirect
 
     MOVEM.L .Registers,-(SP)    * Preserve D0 and A1
 
-    LEA     (-4,SP),A1          * Allocate 4 bytes for the operand string
+    SUBQ.L  #4,SP
+    MOVEA.L SP,A1               * Allocate 4 bytes for the operand string
 
     MOVE.B  #'A',(A1)           * Add 'A' to the string
     MOVE.B  D1,(1,A1)           * Add the address register number to the string
@@ -54,6 +57,7 @@ DisplayAddrDirect
     MOVE.B  #14,D0
     TRAP    #15                 * Display the operand string
 
+    ADDQ.L  #4,SP               * Deallocate 4 bytes for the operand string
     MOVEM.L (SP)+,.Registers    * Restore D0 and A1
     RTS
 
@@ -70,7 +74,8 @@ DisplayAddrIndirect
 
     MOVEM.L .Registers,-(SP)    * Preserve D0 and A1
 
-    LEA     (-8,SP),A1          * Allocate 8 bytes for the operand string
+    SUBA.L  #8,SP
+    MOVEA.L SP,A1               * Allocate 8 bytes for the operand string
 
     MOVE.W  #'(A',(A1)          * Add '(A' to the string
     MOVE.B  D1,(2,A1)           * Add the address register number to the string
@@ -81,6 +86,7 @@ DisplayAddrIndirect
     MOVE.B  #14,D0
     TRAP    #15                 * Display the operand string
 
+    ADDA.L  #8,SP               * Deallocate 8 bytes for the operand string
     MOVEM.L (SP)+,.Registers    * Restore D0 and A1
     RTS
 
@@ -97,7 +103,8 @@ DisplayAddrIncrement
 
     MOVEM.L .Registers,-(SP)    * Preserve D0 and A1
 
-    LEA     (-8,SP),A1          * Allocate 8 bytes for the operand string
+    SUBA.L  #8,SP
+    MOVEA.L SP,A1               * Allocate 8 bytes for the operand string
 
     MOVE.W  #'(A',(A1)          * Add '(A' to the string
     MOVE.B  D1,(2,A1)           * Add the address register number to the string
@@ -109,6 +116,7 @@ DisplayAddrIncrement
     MOVE.B  #14,D0
     TRAP    #15                 * Display the operand string
 
+    ADDA.L  #8,SP               * Deallocate 8 bytes for the operand string
     MOVEM.L (SP)+,.Registers    * Restore D0 and A1
     RTS
 
@@ -125,7 +133,8 @@ DisplayAddrDecrement
 
     MOVEM.L .Registers,-(SP)    * Preserve D0 and A1
 
-    LEA     (-8,SP),A1          * Allocate 8 bytes for the operand string
+    SUBA.L  #8,SP
+    MOVEA.L SP,A1               * Allocate 8 bytes for the operand string
 
     MOVE.L  #'-(A ',(A1)        * Add '-(A' to the string
     MOVE.B  D1,(3,A1)           * Add the address register number to the string
@@ -136,6 +145,7 @@ DisplayAddrDecrement
     MOVE.B  #14,D0
     TRAP    #15                 * Display the operand string
 
+    ADDA.L  #8,SP               * Deallocate 8 bytes for the operand string
     MOVEM.L (SP)+,.Registers    * Restore D0 and A1
     RTS
 
@@ -152,7 +162,8 @@ DisplayAbsAddrWord
 
     MOVEM.L .Registers,-(SP)    * Preserve D0, D2, and A1
 
-    LEA     (-8,SP),A1          * Allocate 8 bytes for the operand string
+    SUBA.L  #8,SP
+    MOVEA.L SP,A1               * Allocate 8 bytes for the operand string
 
     MOVE.B  #'$',(A1)+          * Add '$' to the string
     MOVE.B  #4,D2
@@ -162,6 +173,7 @@ DisplayAbsAddrWord
     MOVE.B  #14,D0
     TRAP    #15                 * Display the operand string
 
+    ADDA.L  #8,SP               * Deallocate 8 bytes for the operand string
     MOVEM.L (SP)+,.Registers    * Restore D0, D2, and A1
     RTS
 
@@ -178,7 +190,8 @@ DisplayAbsAddrLong
 
     MOVEM.L .Registers,-(SP)    * Preserve D0, D2, and A1
 
-    LEA     (-12,SP),A1         * Allocate 12 bytes for the operand string
+    SUBA.L  #12,SP
+    MOVEA.L SP,A1               * Allocate 12 bytes for the operand string
 
     MOVE.B  #'$',(A1)+          * Add '$' to the string
     MOVE.B  #8,D2
@@ -188,6 +201,7 @@ DisplayAbsAddrLong
     MOVE.B  #14,D0
     TRAP    #15                 * Display the operand string
 
+    ADDA.L  #12,SP              * Deallocate 12 bytes for the operand string
     MOVEM.L (SP)+,.Registers    * Restore D0, D2, and A1
     RTS
 
@@ -204,7 +218,8 @@ DisplayImmediateByte
 
     MOVEM.L .Registers,-(SP)    * Preserve D0, D2, and A1
 
-    LEA     (-8,SP),A1          * Allocate 8 bytes for the operand string
+    SUBA.L  #8,SP
+    MOVEA.L SP,A1               * Allocate 8 bytes for the operand string
 
     MOVE.W  #'#$',(A1)+         * Add '#$' to the string
     MOVE.B  #2,D2
@@ -214,6 +229,7 @@ DisplayImmediateByte
     MOVE.B  #14,D0
     TRAP    #15                 * Display the operand string
 
+    ADDA.L  #8,SP               * Deallocate 8 bytes for the operand string
     MOVEM.L (SP)+,.Registers    * Restore D0, D2, and A1
     RTS
 
@@ -230,7 +246,8 @@ DisplayImmediateWord
 
     MOVEM.L .Registers,-(SP)    * Preserve D0, D2, and A1
 
-    LEA     (-8,SP),A1          * Allocate 8 bytes for the operand string
+    SUBA.L  #8,SP
+    MOVEA.L SP,A1               * Allocate 8 bytes for the operand string
 
     MOVE.W  #'#$',(A1)+         * Add '#$' to the string
     MOVE.B  #4,D2
@@ -240,6 +257,7 @@ DisplayImmediateWord
     MOVE.B  #14,D0
     TRAP    #15                 * Display the operand string
 
+    ADDA.L  #8,SP               * Deallocate 8 bytes for the operand string
     MOVEM.L (SP)+,.Registers    * Restore D0, D2, and A1
     RTS
 
@@ -256,7 +274,8 @@ DisplayImmediateLong
 
     MOVEM.L .Registers,-(SP)    * Preserve D0, D2, and A1
 
-    LEA     (-12,SP),A1         * Allocate 12 bytes for the operand string
+    SUBA.L  #12,SP
+    MOVEA.L SP,A1               * Allocate 12 bytes for the operand string
 
     MOVE.W  #'#$',(A1)+         * Add '#$' to the string
     MOVE.B  #8,D2
@@ -266,6 +285,7 @@ DisplayImmediateLong
     MOVE.B  #14,D0
     TRAP    #15                 * Display the operand string
 
+    ADDA.L  #12,SP              * Deallocate 12 bytes for the operand string
     MOVEM.L (SP)+,.Registers    * Restore D0, D2, and A1
     RTS
 
@@ -282,15 +302,18 @@ DisplayUnidentified
 
     MOVEM.L .Registers,-(SP)        * Preserve D0 and A1
 
-    LEA     (-4,SP),A1              * Allocate 4 bytes for the operand string
+    SUBQ.L  #4,SP
+    MOVEA.L SP,A1                   * Allocate 4 bytes for the operand string
 
     MOVE.L  #$3F3F3F00,(A1)         * Set the string to '???'
 
     MOVE.B  #14,D0
     TRAP    #15                     * Display the operand string
 
+    ADDQ.L  #4,SP                   * Deallocate 4 bytes for the operand string
     MOVEM.L (SP)+,.Registers        * Restore D0 and A1
     RTS
+
 
 
 
