@@ -193,7 +193,7 @@ DisplayEA
     MOVE.B  D0,D5                   * D5 = The addressing mode
 
     BTST.L  D5,D3                   * If the mode is supported:
-    BEQ     .Supported              *   Supported
+    BNE     .Supported              *   Supported
     BRA     .Unsupported            * Else:
                                     *   Unsupported
 
@@ -260,7 +260,7 @@ DisplayEA
     BRA     .Return
 
 .Immediate
-    CMPI.B  #1,D3
+    CMPI.B  #1,D2
     BLT     .ImmediateByte          * If size is 0: byte
     BEQ     .ImmediateWord          * If size is 1: word
     BGT     .ImmediateLong          * If size is 2: long
@@ -290,6 +290,8 @@ DisplayEA
 .Return
     MOVEM.L (SP)+,.Registers        * Restore D1, D4, and D5
     RTS
+
+
 
 
 
