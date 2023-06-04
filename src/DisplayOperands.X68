@@ -271,12 +271,12 @@ DisplayImmediateLong
 
 
 *------------------------------------------------------------------------------
-* Subroutine : DisplayUnsupported
-* Description: Displays an unsupported effective address.
+* Subroutine : DisplayUnidentified
+* Description: Displays an unidentified effective address.
 * Parameters : None.
 * Returns    : None.
 *------------------------------------------------------------------------------
-DisplayUnsupported
+DisplayUnidentified
 
 .Registers  REG     D0/A1
 

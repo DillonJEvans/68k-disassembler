@@ -45,6 +45,15 @@
 *   or by using the IsModeSupported subroutine (which does the above).
 *   For example, the bit field of #%01111101 indicates that the EA supports
 *   all addressing modes except for immediate data and address register direct.
+*
+* Instruction Size:
+*   An instruction size is stored in a byte of a data register.
+*   It represents the size of the instruction that the effective address is
+*   contained within.
+*   This impacts the size of immediate data, if that is the effective address
+*   in question.
+*   Below are the different values of an instruction size:
+*       0 = byte    1 = word    2 = long
 *------------------------------------------------------------------------------
 
 
@@ -138,8 +147,7 @@ IsModeSupported
 * Description: Counts how many extension words are required for an effective
 *              address.
 * Parameters : D1.B = The addressing mode.
-*              D2.B = The size of the instruction.
-*                     0 = byte, 1 = word, 2 = long.
+*              D2.B = The instruction size.
 * Returns    : D0.B = The number of extension words needed for the EA.
 *------------------------------------------------------------------------------
 CountExtWords
@@ -163,97 +171,124 @@ CountExtWords
 
 
 *------------------------------------------------------------------------------
-* Subroutine : EAToString
-* Description: Converts an effective address to a string.
+* Subroutine : DisplayEA
+* Description: Displays an effective address.
 * Parameters : D1.L = The effective address.
-*              D2.B = The addressing mode.
-*              D3.B = The size of the instruction.
-*                     0 = byte, 1 = word, 2 = long.
-*               A1  = The location to store the string at.
-* Returns    : (A1) = The null-terminated string.
-*              D0.L = The length of the string.
+*              D2.B = The instruction size.
+*              D3.B = The bit field of supported addressing modes.
+* Returns    : D0.B = 0 if the EA has no problems.
+*                     1 if the EA is not supported by the instruction.
+*                     2 if the EA is not identifiable by the disassembler.
 *------------------------------------------------------------------------------
-EAToString
-    CMPI.B  #0,D2
-    BEQ     .DataDirect
-    CMPI.B  #1,D2
-    BEQ     .AddrDirect
-    CMPI.B  #2,D2
-    BEQ     .AddrIndirect
-    CMPI.B  #3,D2
-    BEQ     .AddrIncrement
-    CMPI.B  #4,D2
-    BEQ     .AddrDecrement
+DisplayEA
 
-    MOVE.L  D1,-(SP)
+.Registers  REG     D1/D4-D5
 
-    CMPI.B  #5,D2
-    BEQ     .AbsAddrWord
-    CMPI.B  #6,D2
-    BEQ     .AbsAddrLong
-    CMPI.B  #7,D2
-    BEQ     .Immediate
+    MOVEM.L .Registers,-(SP)        * Preserve D1, D4, and D5
+    MOVE.L  D1,D4                   * D4 = The effective address
 
-    BRA     .Unsupported
+    BSR     GetAddressingMode       * Get the addressing mode
+    CMPI.B  #-1,D0                  * If the mode cannot be identified:
+    BEQ     .Unidentifiable         *   Unidentifiable
+    MOVE.B  D0,D5                   * D5 = The addressing mode
+
+    BTST.L  D5,D3                   * If the mode is supported:
+    BEQ     .Supported              *   Supported
+    BRA     .Unsupported            * Else:
+                                    *   Unsupported
+
+.Supported
+    MOVE.L  #OperandColor,D1
+    BSR     SetTextColor            * Set text color to operand color
+    MOVE.B  #0,D0                   * Set return value to 0
+    BRA     .BranchToDisplay
+
+.Unsupported
+    MOVE.L  #UnsupportedColor,D1
+    BSR     SetTextColor            * Set text color to unsupported color
+    MOVE.B  #1,D0                   * Set return value to 1
+    BRA     .BranchToDisplay
+
+.BranchToDisplay
+    MOVE.L  D4,D1                   * Move the effective address back into D1
+
+    CMPI.B  #0,D5                   * If the addressing mode is 0:
+    BEQ     .DataDirect             *   Data register direct
+    CMPI.B  #1,D5                   * If the addressing mode is 1:
+    BEQ     .AddrDirect             *   Address register direct
+    CMPI.B  #2,D5                   * If the addressing mode is 2:
+    BEQ     .AddrIndirect           *   Address register indirect
+    CMPI.B  #3,D5                   * If the addressing mode is 3:
+    BEQ     .AddrIncrement          *   Address register indirect w/ post-inc
+    CMPI.B  #4,D5                   * If the addressing mode is 4:
+    BEQ     .AddrDecrement          *   Address register indirect w/ pre-dec
+    CMPI.B  #5,D5                   * If the addressing mode is 5:
+    BEQ     .AbsAddrWord            *   Absolute address word
+    CMPI.B  #6,D5                   * If the addressing mode is 6:
+    BEQ     .AbsAddrLong            *   Absolute address long
+    CMPI.B  #7,D5                   * If the addressing mode is 7:
+    BEQ     .Immediate              *   Immediate data
 
 .DataDirect
-    BSR     DataDirectToString
-    RTS
+    BSR     DisplayDataDirect       * Display data register direct
+    BRA     .Return
 
 .AddrDirect
-    BSR     AddrDirectToString
-    RTS
+    BSR     DisplayAddrDirect       * Display address register direct
+    BRA     .Return
 
 .AddrIndirect
-    BSR     AddrIndirectToString
-    RTS
+    BSR     DisplayAddrIndirect     * Display address register indirect
+    BRA     .Return
 
 .AddrIncrement
-    BSR     AddrIncrementToString
-    RTS
+    BSR     DisplayAddrIncrement    * Display address indirect w/ post-inc
+    BRA     .Return
 
 .AddrDecrement
-    BSR     AddrDecrementToString
-    RTS
+    BSR     DisplayAddrDecrement    * Display address indirect w/ pre-dec
+    BRA     .Return
 
 .AbsAddrWord
-    MOVE.W  (A5)+,D1
-    BSR     AbsAddrWordToString
-    MOVE.L  (SP)+,D1
-    RTS
+    MOVE.W  (A5)+,D1                * Read extension word
+    BSR     DisplayAbsAddrWord      * Display absolute address word
+    BRA     .Return
 
 .AbsAddrLong
-    MOVE.L  (A5)+,D1
-    BSR     AbsAddrLongToString
-    MOVE.L  (SP)+,D1
-    RTS
+    MOVE.L  (A5)+,D1                * Read two extension words
+    BSR     DisplayAbsAddrLong      * Display absolute address long
+    BRA     .Return
 
 .Immediate
     CMPI.B  #1,D3
-    BLT     .ImmediateByte
-    BEQ     .ImmediateWord
-    BGT     .ImmediateLong
+    BLT     .ImmediateByte          * If size is 0: byte
+    BEQ     .ImmediateWord          * If size is 1: word
+    BGT     .ImmediateLong          * If size is 2: long
 
 .ImmediateByte
-    MOVE.W  (A5)+,D1
-    BSR     ImmediateByteToString
-    MOVE.L  (SP)+,D1
-    RTS
+    MOVE.W  (A5)+,D1                * Read extension word
+    BSR     DisplayImmediateByte    * Display immediate data byte
+    BRA     .Return
 
 .ImmediateWord
-    MOVE.W  (A5)+,D1
-    BSR     ImmediateWordToString
-    MOVE.L  (SP)+,D1
-    RTS
+    MOVE.W  (A5)+,D1                * Read extension word
+    BSR     DisplayImmediateWord    * Display immediate data word
+    BRA     .Return
 
 .ImmediateLong
-    MOVE.L  (A5)+,D1
-    BSR     ImmediateLongToString
-    MOVE.L  (SP)+,D1
-    RTS
+    MOVE.L  (A5)+,D1                * Read two extension words
+    BSR     DisplayImmediateLong    * Display immediate data long
+    BRA     .Return
 
-.Unsupported
-    BSR     UnsupportedToString
+.Unidentifiable
+    MOVE.L  #UnidentifiedColor,D1
+    BSR     SetTextColor            * Set text color to unidentified color
+    BSR     DisplayUnidentified
+    MOVE.B  #2,D0                   * Set return value to 2
+    BRA     .Return
+
+.Return
+    MOVEM.L (SP)+,.Registers        * Restore D1, D4, and D5
     RTS
 
 
