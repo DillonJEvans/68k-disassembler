@@ -65,6 +65,10 @@ GetMemoryImage
     MOVEA.L D0,A6               * Store the ending address in A5
 
 .Return
+    BSR     NewLine
+    BSR     ClearLine
+    MOVE.W  #-1,D1
+    BSR     OffsetRow           * Get rid of any lingering error message text
     MOVEM.L (SP)+,.Registers    * Restore D0, D1, and A1
     RTS                         * Return A5 and A6
 
@@ -167,6 +171,7 @@ EndLTStartMsg   DC.B    'The ending address must be greater than or equal to '
 LetterWaitTime  EQU     5
 CR              EQU     $0D
 LF              EQU     $0A
+
 
 
 
