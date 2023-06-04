@@ -216,7 +216,7 @@ DisplayByLine
 *------------------------------------------------------------------------------
 * Subroutine : DisplaySpaces
 * Description: Displays a number of spaces.
-* Parameters : D1.L = The number of spaces to display.
+* Parameters : D1.B = The number of spaces to display.
 * Returns    : None.
 *------------------------------------------------------------------------------
 DisplaySpaces
@@ -224,7 +224,7 @@ DisplaySpaces
 .Registers  REG     D0-D2
 
     MOVEM.L .Registers,-(SP)    * Preserve D0, D1, and D2
-    MOVE.L  D1,D2               * D2 = The counter
+    MOVE.B  D1,D2               * D2 = The counter
 
     MOVE.B  #' ',D1
     MOVE.B  #6,D0               * Prepare to display spaces
@@ -235,7 +235,7 @@ DisplaySpaces
 
     TRAP    #15                 * Display a space
 
-    SUBQ.L  #1,D2               * Decrement the counter
+    SUBQ.B  #1,D2               * Decrement the counter
     BRA     .Loop               * Keep looping
 
 .Return
@@ -315,6 +315,7 @@ WaitForEnter
 
     MOVEM.L (SP)+,.Registers    * Restore D0 and D1
     RTS
+
 
 
 
