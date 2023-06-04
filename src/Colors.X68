@@ -29,6 +29,25 @@ SetTextColor
 *------------------------------------------------------------------------------
 * Equates
 *------------------------------------------------------------------------------
+* When setting the colors, take note that most of the time colors are written
+* in RGB-order, but here colors are in reverse (BGR-order).
+*
+* Default        = The default color of text
+* Input          = User input
+* InvalidInput   = Invalid input error messages
+* Wait           = Wait messages, e.g. "Press enter to continue"
+* Completion     = The completion message: "Disassembling complete"
+* Address        = The address that an instruction is located at
+* Instruction    = The instruction name, e.g. "ADD.B" or "SUB.L"
+* DataLabel      = The stand-in for an instruction name for data: "DATA"
+* Operand        = Operands, e.g. "D2" or "#$14"
+* DataHex        = The value of data (non-instruction), e.g. "$1234"
+* UnsupportedEA  = EAs that we can identify, but aren't supported by that
+*                  specific instruction, e.g. "A1" for a NOT instruction
+* UnidentifiedEA = EAs that we cannot identify as they aren't supported by the
+*                  disassembler
+* InvalidEA      = The message that an EA is not supported: "Unsupported EA"
+
                             *00BBGGRR
 DefaultColor        EQU     $00FFFFFF   * White
 
