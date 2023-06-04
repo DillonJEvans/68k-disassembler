@@ -2,7 +2,7 @@
 * Title      : HexTests
 * Written by : Dillon Evans
 * Date       : 5/20/23
-* Description: Tests the HexToInt, IntToHex, and ExtractBits subroutines.
+* Description: Tests the HexToInt and IntToHex subroutines.
 *------------------------------------------------------------------------------
     ORG     $1000
 
@@ -10,7 +10,6 @@
 *------------------------------------------------------------------------------
 * Includes
 *------------------------------------------------------------------------------
-    INCLUDE ../src/ExtractBits.X68
     INCLUDE ../src/HexToInt.X68
     INCLUDE ../src/IntToHex.X68
     INCLUDE ../src/IOUtils.X68
@@ -31,41 +30,27 @@ Start
     BSR     HexToInt        * Convert the hex string to an int
     CMPI.B  #0,D1           * If the conversion failed:
     BLT     Invalid         *   Ask for a different hex int
-    MOVE.L  D0,D4           * Store the int for later
+    MOVE.L  D0,D3           * Store the int for later
 
-    LEA     MSBMsg,A1
+    LEA     LengthMsg,A1
     MOVE.B  #14,D0
-    TRAP    #15             * Ask for the most-significant bit to extract
+    TRAP    #15             * Ask for the length of the hex string to display
 
     MOVE.B  #4,D0
-    TRAP    #15             * Accept the most-significant bit to extract
-    MOVE.B  D1,D2           * Store the most-significant bit for later
+    TRAP    #15             * Accept the length to display
 
-    LEA     LSBMsg,A1
+    MOVE.B  D1,D2
+    MOVE.L  D3,D1
+    LEA     HexOutput,A1
+    BSR     IntToHex        * Convert the int to a hex string
+
+    LEA     HexMsg,A1
     MOVE.B  #14,D0
-    TRAP    #15             * Ask for the least-significant bit to extract
+    TRAP    #15             * Prepare to display the hex string
 
-    MOVE.B  #4,D0
-    TRAP    #15             * Accept the least-significant bit to extract
-    MOVE.B  D1,D3           * Store the least-significant bit for later
-
-    MOVE.L  D4,D1
-    BSR     ExtractBits     * Extract the bits
-
-    MOVE.L  D0,D1
-    SUB.B   D3,D2
-    LSR.B   #2,D2
-    ADDQ.B  #1,D2
-    LEA     BitsOutput,A1
-    BSR     IntToHex        * Convert the extracted bits to a hex string
-
-    LEA     BitsMsg,A1
-    MOVE.B  #14,D0
-    TRAP    #15             * Prepare to display the extracted bits string
-
-    LEA     BitsOutput,A1
+    LEA     HexOutput,A1
     MOVE.B  #13,D0
-    TRAP    #15             * Display the extracted bits string
+    TRAP    #15             * Display the hex string
 
     BSR     NewLine
     BRA     Start           * Keep looping
@@ -82,16 +67,14 @@ Invalid
 * Variables
 *------------------------------------------------------------------------------
 UserInput   DS.B    81  * Allocate space for user input to be stored
-BitsOutput  DS.B    9   * Allocate space for extracted bits output to be stored
+HexOutput   DS.B    9   * Allocate space for hex output to be stored
 
 
 *------------------------------------------------------------------------------
 * Constants
 *------------------------------------------------------------------------------
 HexMsg      DC.B    'Hex = $',0
-BitsMsg     DC.B    'Extracted Bits = $',0
-MSBMsg      DC.B    'MSB = ',0
-LSBMsg      DC.B    'LSB = ',0
+LengthMsg   DC.B    'Length = ',0
 InvalidMsg  DC.B    'That is not a valid hexadecial number.',0
 
 
@@ -99,7 +82,6 @@ InvalidMsg  DC.B    'That is not a valid hexadecial number.',0
 * End
 *------------------------------------------------------------------------------
     END     Start
-
 
 
 
