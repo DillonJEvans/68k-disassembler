@@ -63,12 +63,9 @@ InstructionColor    EQU     $00FFFFFF   * White
 DataLabelColor      EQU     $00CCCCCC   * Light Grey
 
 OperandColor        EQU     $00CCCCCC   * Light Grey
-<<<<<<< HEAD
-=======
 DataHexColor        EQU     $00CCCCCC   * Light Grey
 UnsupportedEAColor  EQU     $000000FF   * Red
 UnidentifiedEAColor EQU     $000000FF   * Red
->>>>>>> 9d66562 (Added more color options and ensured that all output is properly color coded)
 
 InvalidEAColor      EQU     $000000FF   * Red
 
@@ -99,6 +96,7 @@ InvalidEAColor      EQU     $000000FF   * Red
 * 
 * InvalidEAColor      EQU     $00FF4500   * Orange Red
 *------------------------------------------------------------
+
 
 *~Font name~Courier New~
 *~Font size~10~
