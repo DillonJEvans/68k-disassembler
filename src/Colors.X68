@@ -73,9 +73,32 @@ UnidentifiedEAColor EQU     $000000FF   * Red
 InvalidEAColor      EQU     $000000FF   * Red
 
 
-
-
-
+*-----------------------------------------------
+* Possible Color Scheme
+*-----------------------------------------------
+*  m                          *00BBGGRR
+*
+* DefaultColor        EQU     $00FFFFFF   * White
+*
+* InputColor          EQU     $008B4513   * Saddle Brown
+* InvalidInputColor   EQU     $00FF0000   * Bright Red
+*
+* WaitColor           EQU     $00808080   * Gray
+* CompletionColor     EQU     $0032CD32   * Lime Green
+*
+* AddressColor        EQU     $00000080   * Navy Blue
+*
+* InstructionColor    EQU     $006600CD   * Medium Purple
+* DataLabelColor      EQU     $00ADFF2F   * Green Yellow
+* 
+* OperandColor        EQU     $00FF8C00   * Dark Orange
+* DataHexColor        EQU     $007B68EE   * Medium Slate Blue
+* 
+* UnsupportedEAColor  EQU     $00FF1493   * Deep Pink
+* UnidentifiedEAColor EQU     $008B0000   * Dark Red
+* 
+* InvalidEAColor      EQU     $00FF4500   * Orange Red
+*------------------------------------------------------------
 
 *~Font name~Courier New~
 *~Font size~10~
