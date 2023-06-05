@@ -104,12 +104,7 @@ DisplayAdd
     BSR     DisplayEA           * Display the effective address source
     MOVE.B  D0,D2
 
-    MOVE.L  #OperandColor,D1
-    BSR     SetTextColor        * Set the text color to operand color
-
-    MOVE.B  #',',D1
-    MOVE.B  #6,D0
-    TRAP    #15                 * Display ','
+    BSR     DisplayComma        * Display ','
 
     MOVE.B  D5,D1
     BSR     DisplayDataDirect   * Display the data register destination
@@ -126,9 +121,7 @@ DisplayAdd
     MOVE.B  D5,D1
     BSR     DisplayDataDirect   * Display the data register source
 
-    MOVE.B  #',',D1
-    MOVE.B  #6,D0
-    TRAP    #15                 * Display ','
+    BSR     DisplayComma        * Display ','
 
     MOVE.L  D4,D1
     MOVE.B  D6,D2
@@ -233,12 +226,7 @@ DisplayAddA
     BSR     DisplayEA           * Display the effective address source
     MOVE.B  D0,D2
 
-    MOVE.L  #OperandColor,D1
-    BSR     SetTextColor        * Set the text color to operand color
-
-    MOVE.B  #',',D1
-    MOVE.B  #6,D0
-    TRAP    #15                 * Display ','
+    BSR     DisplayComma        * Display ','
 
     MOVE.B  D5,D1
     BSR     DisplayAddrDirect   * Display the address register destination
@@ -341,9 +329,7 @@ DisplayAddQ
     MOVE.B  D5,D1
     BSR     DisplayImmediateByte    * Display the immediate data
 
-    MOVE.B  #',',D1
-    MOVE.B  #6,D0
-    TRAP    #15                 * Display ','
+    BSR     DisplayComma        * Display ','
 
     MOVE.B  #%01111101,D1       * Supported addressing modes if byte
     MOVE.B  #%01111111,D2       * Supported addressing modes if not byte
@@ -369,6 +355,7 @@ DisplayAddQ
 Add     DC.B    'ADD',0
 AddA    DC.B    'ADDA',0
 AddQ    DC.B    'ADDQ',0
+
 
 
 

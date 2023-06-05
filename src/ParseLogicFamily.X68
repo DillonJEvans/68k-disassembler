@@ -99,12 +99,7 @@ DisplayAnd
     BSR     DisplayEA           * Display the effective address source
     MOVE.B  D0,D2
 
-    MOVE.L  #OperandColor,D1
-    BSR     SetTextColor        * Set the text color to operand color
-
-    MOVE.B  #',',D1
-    MOVE.B  #6,D0
-    TRAP    #15                 * Display ','
+    BSR     DisplayComma        * Display ','
 
     MOVE.B  D5,D1
     BSR     DisplayDataDirect   * Display the data register destination
@@ -121,9 +116,7 @@ DisplayAnd
     MOVE.B  D5,D1
     BSR     DisplayDataDirect   * Display the data register source
 
-    MOVE.B  #',',D1
-    MOVE.B  #6,D0
-    TRAP    #15                 * Display ','
+    BSR     DisplayComma        * Display ','
 
     MOVE.L  D4,D1
     MOVE.B  D6,D2
@@ -233,12 +226,7 @@ DisplayOr
     BSR     DisplayEA           * Display the effective address source
     MOVE.B  D0,D2
 
-    MOVE.L  #OperandColor,D1
-    BSR     SetTextColor        * Set the text color to operand color
-
-    MOVE.B  #',',D1
-    MOVE.B  #6,D0
-    TRAP    #15                 * Display ','
+    BSR     DisplayComma        * Display ','
 
     MOVE.B  D5,D1
     BSR     DisplayDataDirect   * Display the data register destination
@@ -255,9 +243,7 @@ DisplayOr
     MOVE.B  D5,D1
     BSR     DisplayDataDirect   * Display the data register source
 
-    MOVE.B  #',',D1
-    MOVE.B  #6,D0
-    TRAP    #15                 * Display ','
+    BSR     DisplayComma        * Display ','
 
     MOVE.L  D4,D1
     MOVE.B  D6,D2
@@ -373,6 +359,7 @@ DisplayNot
 And     DC.B    'AND',0
 Or      DC.B    'OR',0,0
 Not     DC.B    'NOT',0
+
 
 
 
