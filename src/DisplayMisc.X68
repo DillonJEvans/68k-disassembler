@@ -125,8 +125,55 @@ DisplaySize
     RTS
 
 
+*------------------------------------------------------------------------------
+* Subroutine : DisplayUnsupported
+* Description: Displays the unsupported message if necessary.
+* Parameters : D1.B = The length of the first operand string displayed.
+*              D2.B = The length of the second operand string displayed.
+* Returns    : None.
+*------------------------------------------------------------------------------
+DisplayUnsupported
+
+.Registers  REG     D0-D2/A1
+
+    MOVEM.L .Registers,-(SP)    * Preserve D0, D1, D2, and A1
+
+.FirstOperand
+    CMPI.B  #0,D1               * If D1 is positive:
+    BGE     .SecondOperand      *   Check D2
+    NOT.B   D1                  * Else:
+    CMPI.B  #0,D2               *   NOT D1
+    BGE     .Unsupported        *   If D2 is negative:
+    NOT.B   D2                  *       NOT D2
+    BRA     .Unsupported        *   Display the unsupported EA message
+
+.SecondOperand
+    CMPI.B  #0,D2               * If D2 is negative:
+    BGE     .Return             *   NOT D2
+    NOT.B   D2                  *   Display the unsupported EA message
+
+.Unsupported
+    ADD.B   D2,D1
+    NEG.B   D1
+    ADDI.B  #24,D1
+    BSR     DisplaySpaces       * Display 24 - D1 - D2 spaces
+
+    MOVE.L  #InvalidEAColor,D1
+    BSR     SetTextColor        * Set the text color to invalid EA color
+
+    LEA     UnsupportedMsg,A1
+    MOVE.B  #14,D0
+    TRAP    #15                 * Display the unsupported EA message
+
+.Return
+    MOVEM.L (SP)+,.Registers    * Restore D0, D1, D2, and A1
+    RTS
 
 
+*------------------------------------------------------------------------------
+* Constants
+*------------------------------------------------------------------------------
+UnsupportedMsg  DC.B    'Unsupported Effective Address',0
 
 
 

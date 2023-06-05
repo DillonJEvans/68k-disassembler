@@ -176,9 +176,12 @@ CountExtWords
 * Parameters : D1.L = The effective address.
 *              D2.B = The instruction size.
 *              D3.B = The bit field of supported addressing modes.
-* Returns    : D0.B = 0 if the EA has no problems.
-*                     1 if the EA is not supported by the instruction.
-*                     2 if the EA is not identifiable by the disassembler.
+* Returns    : D0.B = The length of the string displayed.
+* Notes:
+*   If the effective address is either unidentifiable or not one of the
+*   supported addressing modes:
+*       D0.B will be negative.
+*       NOT D0.B will produce the length of the string displayed.
 *------------------------------------------------------------------------------
 DisplayEA
 
@@ -200,13 +203,11 @@ DisplayEA
 .Supported
     MOVE.L  #OperandColor,D1
     BSR     SetTextColor            * Set text color to operand color
-    MOVE.B  #0,D0                   * Set return value to 0
     BRA     .BranchToDisplay
 
 .Unsupported
     MOVE.L  #UnsupportedEAColor,D1
     BSR     SetTextColor            * Set text color to unsupported EA color
-    MOVE.B  #1,D0                   * Set return value to 1
     BRA     .BranchToDisplay
 
 .BranchToDisplay
@@ -284,12 +285,20 @@ DisplayEA
     MOVE.L  #UnidentifiedEAColor,D1
     BSR     SetTextColor            * Set text color to unidentified EA color
     BSR     DisplayUnidentified     * Display the unidentified EA
-    MOVE.B  #2,D0                   * Set return value to 2
-    BRA     .Return
+    NOT.B   D0                      * Not the return value
+    BRA     .ReturnEnd
 
 .Return
+    BTST.L  D5,D3                   * If the mode is supported:
+    BNE     .ReturnEnd              *   Supported
+    NOT.B   D0                      * Else:
+                                    *   Not the return value
+
+.ReturnEnd
     MOVEM.L (SP)+,.Registers        * Restore D1, D4, and D5
     RTS
+
+
 
 
 
