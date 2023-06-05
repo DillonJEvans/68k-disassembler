@@ -38,6 +38,19 @@ UnsupportedColor    EQU     $000000FF   * Red
 UnidentifiedColor   EQU     $000000FF   * Red
 
 
+*--------------------------------------------------------
+* Possible Colors? 
+*
+* 
+* AddressColor        EQU     $00008000   * Green
+* InstructionColor    EQU     $00FF0000   * Red
+* DataColor           EQU     $000000FF   * Blue
+* OperandColor        EQU     $00808000   * Olive
+* UnsupportedColor    EQU     $008B008B   * Dark Magenta
+* UnidentifiedColor   EQU     $0080008B   * Dark Violet
+*
+*-----------------------------------------------------------
+
 
 
 
