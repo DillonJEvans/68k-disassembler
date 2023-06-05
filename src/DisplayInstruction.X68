@@ -26,6 +26,14 @@ DisplayInstruction
     CMPI.B  #1,D0           *   Display the instruction as an ADDQ
     BEQ     .Return         *   Return
 
+    * Bra Family
+    BSR     ParseBra        * If the instruction is a BRA:
+    CMPI.B  #1,D0           *   Display the instruction as an BRA
+    BEQ     .Return         *   Return
+    BSR     ParseBcc        * If the instruction is a Bcc:
+    CMPI.B  #1,D0           *   Display the instruction as an Bcc
+    BEQ     .Return         *   Return
+
     * Logic Family
     BSR     ParseAnd        * If the instruction is an AND:
     CMPI.B  #1,D0           *   Display the instruction as an AND
@@ -48,6 +56,11 @@ DisplayInstruction
     CMPI.B  #1,D0           *   Display the instruction as an MOVEQ
     BEQ     .Return         *   Return
 
+    * Sub
+    BSR     ParseSub        * If the instruction is a SUB:
+    CMPI.B  #1,D0           *   Display the instruction as a SUB
+    BEQ     .Return         *   Return
+
     * Miscellaneous
     BSR     ParseJsr        * If the instruction is a JSR:
     CMPI.B  #1,D0           *   Display the instruction as a JSR
@@ -67,6 +80,7 @@ DisplayInstruction
 .Return
     MOVE.L  (SP)+,D0        * Restore D0
     RTS
+
 
 
 

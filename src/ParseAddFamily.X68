@@ -93,8 +93,8 @@ DisplayAdd
                                 *   EA is the destination
 
 .EAIsSource
-    MOVE.B  #%01111101,D1       * Supported addressing modes if byte
-    MOVE.B  #%01111111,D2       * Supported addressing modes if not byte
+    MOVE.B  #%11111101,D1       * Supported addressing modes if byte
+    MOVE.B  #%11111111,D2       * Supported addressing modes if not byte
     MOVE.B  D6,D3
     BSR     SetSuppModesBySize  * Set the supported addressing modes
 
@@ -355,6 +355,7 @@ DisplayAddQ
 Add     DC.B    'ADD',0
 AddA    DC.B    'ADDA',0
 AddQ    DC.B    'ADDQ',0
+
 
 
 
