@@ -7,7 +7,10 @@
     INCLUDE ../tests/TestInstructions.X68   * Load test code from 6000 to 63BC
     ADDQ.B  #3,D0
     ADDQ.W  #4,A1
-    ADDQ.L  #5,$5000
+    ADDQ.L  #5,$5000                        * 63C4
+    NOT.B   D1
+    NOT.W   (A1)
+    NOT.L   $8000                           * 63CC
 
 
     ORG     $1000
@@ -28,6 +31,7 @@
     INCLUDE ParseUtils.X68
 
     INCLUDE ParseAddFamily.X68
+    INCLUDE ParseLogicFamily.X68
 
 
 *------------------------------------------------------------------------------
@@ -97,6 +101,7 @@ CompleteMsg     DC.B    'Disassembling complete.',0
 * End
 *------------------------------------------------------------------------------
     END     Start
+
 
 
 
