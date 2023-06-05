@@ -304,9 +304,8 @@ DisplayUnidentified
 
     ADDQ.L  #4,SP               * Deallocate 4 bytes for the operand string
     MOVE.L  (SP)+,A1            * Restore A1
-    MOVE.B  #4,D0               * Return 3
+    MOVE.B  #3,D0               * Return 3
     RTS
-
 
 
 

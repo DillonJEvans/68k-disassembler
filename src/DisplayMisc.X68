@@ -153,6 +153,13 @@ DisplayUnsupported
     NOT.B   D2                  *   Display the unsupported EA message
 
 .Unsupported
+    CMPI.B  #0,D2
+    BEQ     .CommaPresent
+
+.CommaPresent
+    ADDQ.B  #1,D1
+
+.UnsupportedC
     ADD.B   D2,D1
     NEG.B   D1
     ADDI.B  #24,D1
@@ -174,6 +181,7 @@ DisplayUnsupported
 * Constants
 *------------------------------------------------------------------------------
 UnsupportedMsg  DC.B    'Unsupported Effective Address',0
+
 
 
 
