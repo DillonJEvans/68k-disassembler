@@ -37,11 +37,24 @@ DisplayInstruction
     CMPI.B  #1,D0           *   Display the instruction as an NOT
     BEQ     .Return         *   Return
 
+    * Move Family
+    BSR     ParseMoveA      * If the instruction is an MOVEA:
+    CMPI.B  #1,D0           *   Display the instruction as an MOVEA
+    BEQ     .Return         *   Return
+    BSR     ParseMove       * If the instruction is an MOVE:
+    CMPI.B  #1,D0           *   Display the instruction as an MOVE
+    BEQ     .Return         *   Return
+    BSR     ParseMoveQ      * If the instruction is an MOVEQ:
+    CMPI.B  #1,D0           *   Display the instruction as an MOVEQ
+    BEQ     .Return         *   Return
+
     BSR     DisplayData     * Display the instruction word as data
 
 .Return
     MOVE.L  (SP)+,D0        * Restore D0
     RTS
+
+
 
 
 
