@@ -343,6 +343,58 @@ WaitForEnter
     RTS
 
 
+*------------------------------------------------------------------------------
+* Subroutine : WaitForYN
+* Description: Waits for the user to press either Y or N.
+* Parameters : None.
+* Returns    : D0.B = 1 if Y was pressed, 0 if N was pressed.
+*------------------------------------------------------------------------------
+WaitForYN
+
+.Registers  REG     D1-D2
+
+    MOVEM.L .Registers,-(SP)    * Preserve D1 and D2
+
+    MOVE.B  #0,D1
+    MOVE.B  #12,D0
+    TRAP    #15                 * Disable echo
+
+.ReadChar
+    MOVE.B  #5,D0
+    TRAP    #15                 * Accept a character from the user
+
+    CMPI.B  #'Y',D1             * If the character is a 'Y':
+    BEQ     .Yes                *   Yes
+    CMPI.B  #'y',D1             * If the character is a 'y':
+    BEQ     .Yes                *   Yes
+    CMPI.B  #'N',D1             * If the character is a 'N':
+    BEQ     .No                 *   No
+    CMPI.B  #'n',D1             * If the character is a 'n':
+    BEQ     .No                 *   No
+
+    BRA     .ReadChar
+
+.Yes
+    MOVE.B  #1,D2               * Return 1
+    BRA     .Return
+
+.No
+    CLR.B   D2                  * Return 0
+
+.Return
+    MOVE.B  #6,D0
+    TRAP    #15                 * Display the last entered character
+
+    MOVE.B  #1,D1
+    MOVE.B  #12,D0
+    TRAP    #15                 * Enable echo
+
+    MOVE.B  D2,D0               * Place the return value in D0
+    MOVEM.L (SP)+,.Registers    * Restore D1 and D2
+    RTS
+
+
+
 
 
 

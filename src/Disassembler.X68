@@ -43,6 +43,7 @@
 * Start
 *------------------------------------------------------------------------------
 Start
+    BSR     ClearScreen
     BSR     GetMemoryImage      * Gets the memory image from the user
 
     MOVE.B  #25,D7              * D7 = The displayed instructions count
@@ -91,6 +92,20 @@ Start
     MOVE.B  #14,D0
     TRAP    #15                 * Display a complete message
 
+    BSR     NewLine
+
+    MOVE.L  #WaitColor,D1
+    BSR     SetTextColor        * Set the text color to wait color
+
+    LEA     RestartMsg,A1
+    MOVE.B  #14,D0
+    TRAP    #15                 * Display a restart message
+
+    BSR     WaitForYN           * Accept either a Y or N from the user
+
+    CMPI.B  #1,D0               * If y was entered:
+    BEQ     Start               *   Restart the disassembler
+
     MOVE.B  #9,D0
     TRAP    #15                 * Halt the simulator
 
@@ -100,12 +115,14 @@ Start
 *------------------------------------------------------------------------------
 PressEnterMsg   DC.B    'Please press enter to continue...',0
 CompleteMsg     DC.B    'Disassembling complete.',0
+RestartMsg      DC.B    'Restart disassembler? (Y/N) ',0
 
 
 *------------------------------------------------------------------------------
 * End
 *------------------------------------------------------------------------------
     END     Start
+
 
 
 
