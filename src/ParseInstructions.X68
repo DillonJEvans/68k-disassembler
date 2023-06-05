@@ -109,17 +109,18 @@ DisplayAdd
                                 *   Support address register direct
 
 .ByteSize
-    MOVE.B  #%11111101,D3
+    MOVE.B  #%01111101,D3
     BRA     .EAIsSourceCont
 
 .NonByteSize
-    MOVE.B  #%11111111,D3
+    MOVE.B  #%01111111,D3
     BRA     .EAIsSourceCont
 
 .EAIsSourceCont
     MOVE.L  D4,D1
     MOVE.B  D6,D2
     BSR     DisplayEA           * Display the effective address source
+    MOVE.B  D0,D2
 
     MOVE.L  #OperandColor,D1
     BSR     SetTextColor        * Set the text color to operand color
@@ -130,6 +131,9 @@ DisplayAdd
 
     MOVE.B  D5,D1
     BSR     DisplayDataDirect   * Display the data register source
+
+    MOVE.B  D0,D1
+    BSR     DisplayUnsupported
 
     BRA     .Return
 
@@ -149,11 +153,17 @@ DisplayAdd
     MOVE.B  #%01111100,D3
     BSR     DisplayEA           * Display the effective address destination
 
+    MOVE.B  #2,D1
+    MOVE.B  D0,D2
+    BSR     DisplayUnsupported  * Display the unsupported EA message if needed
+
     BRA     .Return
 
 .Return
     MOVEM.L (SP)+,.Registers    * Restore D0 to D6, and A1
     RTS
+
+
 
 
 
