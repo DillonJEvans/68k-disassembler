@@ -4,13 +4,7 @@
 * Date       : 5/25/23
 * Description: Disassembles a memory image to 68000 assembly.
 *------------------------------------------------------------------------------
-    INCLUDE ../tests/TestInstructions.X68   * Load test code from 6000 to 63BC
-    ADDQ.B  #3,D0
-    ADDQ.W  #4,A1
-    ADDQ.L  #5,$5000                        * 63C4
-    NOT.B   D1
-    NOT.W   (A1)
-    NOT.L   $8000                           * 63CC
+    INCLUDE ../tests/demo_test.X68  * Demo code between $9000 and $93C0
 
 
     ORG     $1000
@@ -122,6 +116,7 @@ RestartMsg      DC.B    'Restart disassembler? (Y/N) ',0
 * End
 *------------------------------------------------------------------------------
     END     Start
+
 
 
 
