@@ -288,6 +288,32 @@ OffsetRow
 
 
 *------------------------------------------------------------------------------
+* Subroutine : StringLength
+* Description: Determines the length of a null terminated string.
+* Parameters : (A1) = The null terminated string.
+* Returns    : D0.B = The length of the string.
+*------------------------------------------------------------------------------
+StringLength
+
+.Registers  REG     D1/A1
+
+    MOVEM.L .Registers,-(SP)    * Preserve D1 and A1
+    CLR.B   D0                  * Start the length at 0
+
+.Loop
+    MOVE.B  (A1)+,D1            * Read the next character of the string
+    CMPI.B  #0,D1               * If the end of the string has been reached:
+    BEQ     .Return             *   Return the length
+                                * Else:
+    ADDQ.B  #1,D0               *   Increment the length
+    BRA     .Loop               *   Keep looping
+
+.Return
+    MOVEM.L (SP)+,.Registers    * Restore D1 and A1
+    RTS
+
+
+*------------------------------------------------------------------------------
 * Subroutine : WaitForEnter
 * Description: Waits for the user to press enter.
 * Parameters : None.
@@ -315,6 +341,7 @@ WaitForEnter
 
     MOVEM.L (SP)+,.Registers    * Restore D0 and D1
     RTS
+
 
 
 

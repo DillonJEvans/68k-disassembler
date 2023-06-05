@@ -21,12 +21,16 @@ DisplayInstruction
     BSR     ParseAddA       * If the instruction is an ADDA:
     CMPI.B  #1,D0           *   Display the instruction as an ADDA
     BEQ     .Return         *   Return
+    BSR     ParseAddQ       * If the instruction is an ADDQ:
+    CMPI.B  #1,D0           *   Display the instruction as an ADDQ
+    BEQ     .Return         *   Return
 
     BSR     DisplayData     * Display the instruction word as data
 
 .Return
     MOVE.L  (SP)+,D0        * Restore D0
     RTS
+
 
 
 

@@ -5,6 +5,9 @@
 * Description: Disassembles a memory image to 68000 assembly.
 *------------------------------------------------------------------------------
     INCLUDE ../tests/TestInstructions.X68   * Load test code from 6000 to 63BC
+    ADDQ.B  #3,D0
+    ADDQ.W  #4,A1
+    ADDQ.L  #5,$5000
 
 
     ORG     $1000
@@ -22,8 +25,9 @@
     INCLUDE HexToInt.X68
     INCLUDE IntToHex.X68
     INCLUDE IOUtils.X68
+    INCLUDE ParseUtils.X68
 
-    INCLUDE ParseAdd.X68
+    INCLUDE ParseAddFamily.X68
 
 
 *------------------------------------------------------------------------------
@@ -93,6 +97,8 @@ CompleteMsg     DC.B    'Disassembling complete.',0
 * End
 *------------------------------------------------------------------------------
     END     Start
+
+
 
 
 
