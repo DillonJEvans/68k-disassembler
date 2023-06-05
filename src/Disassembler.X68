@@ -32,6 +32,7 @@
 
     INCLUDE ParseAddFamily.X68
     INCLUDE ParseLogicFamily.X68
+    INCLUDE ParseMisc.X68
     INCLUDE ParseMoveFamily.X68
 
 
@@ -102,6 +103,8 @@ CompleteMsg     DC.B    'Disassembling complete.',0
 * End
 *------------------------------------------------------------------------------
     END     Start
+
+
 
 
 

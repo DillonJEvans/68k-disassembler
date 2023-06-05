@@ -48,11 +48,26 @@ DisplayInstruction
     CMPI.B  #1,D0           *   Display the instruction as an MOVEQ
     BEQ     .Return         *   Return
 
+    * Miscellaneous
+    BSR     ParseJsr        * If the instruction is a JSR:
+    CMPI.B  #1,D0           *   Display the instruction as a JSR
+    BEQ     .Return         *   Return
+    BSR     ParseLea        * If the instruction is a LEA:
+    CMPI.B  #1,D0           *   Display the instruction as a LEA
+    BEQ     .Return         *   Return
+    BSR     ParseNop        * If the instruction is a NOP:
+    CMPI.B  #1,D0           *   Display the instruction as a NOP
+    BEQ     .Return         *   Return
+    BSR     ParseRts        * If the instruction is a RTS:
+    CMPI.B  #1,D0           *   Display the instruction as a RTS
+    BEQ     .Return         *   Return
+
     BSR     DisplayData     * Display the instruction word as data
 
 .Return
     MOVE.L  (SP)+,D0        * Restore D0
     RTS
+
 
 
 
