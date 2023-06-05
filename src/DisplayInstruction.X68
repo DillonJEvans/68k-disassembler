@@ -56,6 +56,17 @@ DisplayInstruction
     CMPI.B  #1,D0           *   Display the instruction as an MOVEQ
     BEQ     .Return         *   Return
 
+    * Shift Family
+    BSR     ParseASd        * If the instruction is an ASL/ASR:
+    CMPI.B  #1,D0           *   Display the instruction as an ASL/ASR
+    BEQ     .Return         *   Return
+    BSR     ParseLSd        * If the instruction is a LSL/LSR:
+    CMPI.B  #1,D0           *   Display the instruction as a LSL/LSR
+    BEQ     .Return         *   Return
+    BSR     ParseROd        * If the instruction is a ROL/ROR:
+    CMPI.B  #1,D0           *   Display the instruction as a ROL/ROR
+    BEQ     .Return         *   Return
+
     * Sub
     BSR     ParseSub        * If the instruction is a SUB:
     CMPI.B  #1,D0           *   Display the instruction as a SUB
@@ -80,6 +91,7 @@ DisplayInstruction
 .Return
     MOVE.L  (SP)+,D0        * Restore D0
     RTS
+
 
 
 
